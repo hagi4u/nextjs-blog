@@ -1,6 +1,7 @@
 import { cn } from '@/utils/style';
 import Link from 'next/link';
 import { AiFillGithub, AiFillInstagram, AiOutlineClose } from 'react-icons/ai';
+import IconButton from './IconButton';
 
 type SidebarProps = {
   close: () => void;
@@ -16,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
       )}
     >
       <div className="flex justify-end lg:hidden">
-        <AiOutlineClose className="h-5 w-5" onClick={close} />
+        <IconButton onClick={close} Icon={AiOutlineClose} />
       </div>
       <Link href="/" className="w048 text-gray-660 font-medium hover:underline">
         홈
@@ -34,12 +35,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
         Web Development
       </Link>
       <div className="item-center mt-10 flex gap-4">
-        <Link href="https://instagram.com" target="_blank">
-          <AiFillGithub />
-        </Link>
-        <Link href="https://instagram.com" target="_blank">
-          <AiFillInstagram />
-        </Link>
+        <IconButton
+          href="https://instagram.com"
+          target="_blank"
+          onClick={close}
+          Icon={AiFillGithub}
+          component={Link}
+        />
+        <IconButton
+          href="https://instagram.com"
+          target="_blank"
+          onClick={close}
+          Icon={AiFillInstagram}
+          component={Link}
+        />
       </div>
     </div>
   );
