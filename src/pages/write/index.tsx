@@ -1,3 +1,4 @@
+import Input from '@/components/Input';
 import { MarkdownEditor } from '@/components/Markdown';
 import { createClient } from '@/utils/supabase/server';
 import { GetServerSideProps } from 'next';
@@ -17,9 +18,10 @@ type WriteProps = {
 
 const Write = ({ existingTags, existingCategories }: WriteProps) => {
   const router = useRouter();
+
+  const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
   const [content, setContent] = useState('');
@@ -28,7 +30,7 @@ const Write = ({ existingTags, existingCategories }: WriteProps) => {
     e.preventDefault();
     const formData = new FormData();
 
-    formData.append('title', title);
+    formData.append('title', titleRef.current?.value ?? '');
     formData.append('category', category);
     formData.append('tags', tags);
     formData.append('content', content);
@@ -53,43 +55,35 @@ const Write = ({ existingTags, existingCategories }: WriteProps) => {
       <h1 className="mb-8 text-2xl font-medium">새로운 글</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-3">
-          <input
-            type="text"
-            placeholder="제목"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="hover:border-grey-400 rounded-md border border-gray-300 p-2 transition-all"
+          <Input type="text" placeholder="제목" />
+          <Input type="file" ref={fileRef} accept="image/*" />
+
+          <ReactSelect
+            options={existingCategories}
+            placeholder="카테고리"
+            isMulti={false}
+            onChange={(e) => e && setCategory(e.value)}
           />
-          <input
-            type="file"
-            ref={fileRef}
-            accept="image/*"
-            className="hover:border-grey-400 rounded-md border border-gray-300 p-2 transition-all"
+          <ReactSelect
+            options={existingTags}
+            placeholder="태그"
+            isMulti
+            onChange={(e) =>
+              e && setTags(JSON.stringify(e.map((e) => e.value)))
+            }
           />
+          <MarkdownEditor
+            height={500}
+            value={content}
+            onChange={(e) => e && setContent(e)}
+          />
+          <button
+            type="submit"
+            className="mt-4 w-full rounded-md bg-gray-800 py-2 text-white"
+          >
+            작성하기
+          </button>
         </div>
-        <ReactSelect
-          options={existingCategories}
-          placeholder="카테고리"
-          isMulti={false}
-          onChange={(e) => e && setCategory(e.value)}
-        />
-        <ReactSelect
-          options={existingTags}
-          placeholder="태그"
-          isMulti
-          onChange={(e) => e && setTags(JSON.stringify(e.map((e) => e.value)))}
-        />
-        <MarkdownEditor
-          height={500}
-          value={content}
-          onChange={(e) => e && setContent(e)}
-        />
-        <button
-          type="submit"
-          className="mt-4 w-full rounded-md bg-gray-800 py-2 text-white"
-        >
-          작성하기
-        </button>
       </form>
     </div>
   );

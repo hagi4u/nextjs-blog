@@ -8,11 +8,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'rzrozpdcyyxnwgvuzuny.supabase.co',
-        port: '',
         pathname: '/storage/v1/object/public/**',
       },
     ],
   },
 };
 
-export default removeImports(nextConfig);
+export default removeImports()(nextConfig);

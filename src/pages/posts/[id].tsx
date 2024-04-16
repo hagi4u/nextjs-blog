@@ -18,8 +18,8 @@ export default function PostPage({
   preview_image,
 }: PostProps) {
   return (
-    <div className="container mx-auto flex flex-col px-4 pb-40 pt-20">
-      <h1 className="mb-8 text-4xl font-bold">{title}</h1>
+    <div className="container mx-auto flex flex-col gap-8 px-4 pb-40 pt-20">
+      <h1 className="text-4xl font-bold">{title}</h1>
       <div className="flex flex-row items-center gap-2">
         <Link
           href={`/categories/${category}`}
@@ -70,8 +70,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 
   const { title, category, created_at, tags, content, preview_image } = data[0];
-
-  console.log('response: ', data);
   return {
     props: {
       id,
