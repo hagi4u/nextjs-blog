@@ -25,12 +25,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
       <div className="flex justify-end lg:hidden">
         <IconButton onClick={close} Icon={AiOutlineClose} />
       </div>
-      <Link href="/" className="w048 text-gray-660 font-medium hover:underline">
+      <Link
+        href="/"
+        className="w-full font-medium text-gray-600 hover:underline"
+      >
         홈
       </Link>
       <Link
         href="/tag"
-        className="w048 text-gray-660 font-medium hover:underline"
+        className="w-full font-medium text-gray-600 hover:underline"
       >
         태그
       </Link>
@@ -38,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
         <Link
           href={`/category/${category}`}
           key={category}
-          className="w048 text-gray-660 font-medium hover:underline"
+          className="w-full font-medium text-gray-600 hover:underline"
         >
           {category}
         </Link>
