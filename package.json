@@ -13,6 +13,7 @@
   "dependencies": {
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.42.3",
+    "@tanstack/react-query": "^5.32.1",
     "@uiw/react-markdown-preview": "^5.1.1",
     "@uiw/react-md-editor": "^4.0.4",
     "class-variance-authority": "^0.7.0",

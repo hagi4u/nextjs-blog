@@ -1,7 +1,7 @@
 import Input from '@/components/Input';
 import { MarkdownEditor } from '@/components/Markdown';
-import { createClient } from '@/utils/supabase/server';
-import { GetServerSideProps } from 'next';
+import { createClient } from '@/utils/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { FormEvent, useRef, useState } from 'react';
 import ReactSelect from 'react-select';
@@ -11,16 +11,45 @@ type ReactSelectProps = {
   value: string;
 };
 
-type WriteProps = {
-  existingTags: ReactSelectProps[];
-  existingCategories: ReactSelectProps[];
-};
-
-const Write = ({ existingTags, existingCategories }: WriteProps) => {
+const Write = () => {
   const router = useRouter();
 
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const { data: existingCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from('Post').select('category');
+      return Array.from(
+        new Set(
+          data?.map((d) => ({
+            label: d.category,
+            value: d.category,
+          })),
+        ),
+      );
+    },
+  });
+
+  const { data: existingTags } = useQuery({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from('Post').select('tags');
+      return Array.from(
+        new Set(
+          data?.flatMap((d) =>
+            JSON.parse(d.tags).map((tag: string) => ({
+              label: tag,
+              value: tag,
+            })),
+          ),
+        ),
+      );
+    },
+  });
 
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
@@ -87,35 +116,6 @@ const Write = ({ existingTags, existingCategories }: WriteProps) => {
       </form>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<WriteProps> = async ({
-  req,
-}) => {
-  const supabase = createClient(req.cookies);
-  const { data } = await supabase.from('Post').select('category, tags');
-  return {
-    props: {
-      existingCategories: Array.from(
-        new Set(
-          data?.map((d) => ({
-            label: d.category,
-            value: d.category,
-          })),
-        ),
-      ),
-      existingTags: Array.from(
-        new Set(
-          data?.flatMap((d) =>
-            JSON.parse(d.tags).map((tag: string) => ({
-              label: tag,
-              value: tag,
-            })),
-          ),
-        ),
-      ),
-    },
-  };
 };
 
 export default Write;
