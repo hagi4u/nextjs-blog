@@ -31,7 +31,7 @@ export default function PostPage({
           <Link
             href={`/tags/${tag}`}
             key={tag}
-            className="rounded-md bg-slate-800 px-2 py-1 text-sm text-white"
+            className="rounded-md bg-slate-400 px-2 py-1 text-sm text-white"
           >
             {tag}
           </Link>
