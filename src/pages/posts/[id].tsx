@@ -2,11 +2,43 @@ import { MarkdownViewer } from '@/components/Markdown';
 import { Post } from '@/types';
 import { createClient } from '@/utils/supabase/server';
 import { format } from 'date-fns';
-import { GetServerSideProps } from 'next';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-type PostProps = Post;
+const supabase = createClient({});
+
+export const getStaticPaths = (async () => {
+  const { data } = await supabase.from('Post').select('id');
+
+  return {
+    paths: data?.map(({ id }) => ({ params: { id: id.toString() } })) ?? [],
+    fallback: 'blocking',
+  };
+}) satisfies GetStaticPaths;
+
+export const getStaticProps = (async (context) => {
+  const id = context.params?.id;
+
+  const { data } = await supabase.from('Post').select('*').eq('id', Number(id));
+
+  if (!data || !data[0]) {
+    return { notFound: true };
+  }
+
+  const { title, category, created_at, tags, content, preview_image } = data[0];
+  return {
+    props: {
+      id: Number(id),
+      title,
+      category,
+      created_at,
+      tags: JSON.parse(tags) as string[],
+      content,
+      preview_image,
+    },
+  };
+}) satisfies GetStaticProps<Post>;
 
 export default function PostPage({
   id,
@@ -16,7 +48,7 @@ export default function PostPage({
   content,
   created_at,
   preview_image,
-}: PostProps) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className="container flex flex-col gap-8 pb-40 pt-20">
       <h1 className="text-4xl font-bold">{title}</h1>
@@ -55,30 +87,3 @@ export default function PostPage({
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  query,
-}) => {
-  const { id } = query;
-  const supabase = createClient(req.cookies);
-
-  const { data } = await supabase.from('Post').select('*').eq('id', Number(id));
-
-  if (!data || !data[0]) {
-    return { notFound: true };
-  }
-
-  const { title, category, created_at, tags, content, preview_image } = data[0];
-  return {
-    props: {
-      id,
-      title,
-      category,
-      created_at,
-      tags: JSON.parse(tags) as string[],
-      content,
-      preview_image,
-    },
-  };
-};

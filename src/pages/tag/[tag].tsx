@@ -1,20 +1,27 @@
 import PostList from '@/components/PostList';
-import { GetServerSideProps } from 'next';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 type TagPostsProps = {
   tag: string;
 };
 
-export default function TagPosts({ tag }: TagPostsProps) {
-  return <PostList tag={tag} />;
-}
+export const getStaticPaths = (async (context) => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+}) satisfies GetStaticPaths;
 
-export const getServerSideProps: GetServerSideProps<TagPostsProps> = async ({
-  query,
-}) => {
+export const getStaticProps = (async (context) => {
   return {
     props: {
-      tag: query.tag as string,
+      tag: context.params?.tag as string,
     },
   };
-};
+}) satisfies GetStaticProps<TagPostsProps>;
+
+export default function TagPosts({
+  tag,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return <PostList tag={tag} />;
+}
