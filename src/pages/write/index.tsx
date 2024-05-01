@@ -1,8 +1,7 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MarkdownEditor } from '@/components/Markdown';
-import { createClient } from '@/utils/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { useCategories, useTags } from '@/utils/hooks';
 import { useRouter } from 'next/router';
 import { FormEvent, useRef, useState } from 'react';
 import ReactSelect from 'react-select';
@@ -18,28 +17,8 @@ const Write = () => {
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const { data: existingCategories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const supabase = createClient();
-      const { data } = await supabase.from('Post').select('category');
-      return Array.from(new Set(data?.map((d) => d.category)));
-    },
-  });
-
-  const { data: existingTags } = useQuery({
-    queryKey: ['tags'],
-    queryFn: async () => {
-      const supabase = createClient();
-      const { data } = await supabase.from('Post').select('tags');
-
-      return Array.from(
-        new Set(
-          data?.flatMap((d) => JSON.parse(d.tags).map((tag: string) => tag)),
-        ),
-      );
-    },
-  });
+  const { data: existingCategories } = useCategories();
+  const { data: existingTags } = useTags();
 
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
