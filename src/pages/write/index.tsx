@@ -1,3 +1,4 @@
+import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MarkdownEditor } from '@/components/Markdown';
 import { createClient } from '@/utils/supabase/client';
@@ -22,14 +23,7 @@ const Write = () => {
     queryFn: async () => {
       const supabase = createClient();
       const { data } = await supabase.from('Post').select('category');
-      return Array.from(
-        new Set(
-          data?.map((d) => ({
-            label: d.category,
-            value: d.category,
-          })),
-        ),
-      );
+      return Array.from(new Set(data?.map((d) => d.category)));
     },
   });
 
@@ -38,14 +32,10 @@ const Write = () => {
     queryFn: async () => {
       const supabase = createClient();
       const { data } = await supabase.from('Post').select('tags');
+
       return Array.from(
         new Set(
-          data?.flatMap((d) =>
-            JSON.parse(d.tags).map((tag: string) => ({
-              label: tag,
-              value: tag,
-            })),
-          ),
+          data?.flatMap((d) => JSON.parse(d.tags).map((tag: string) => tag)),
         ),
       );
     },
@@ -80,7 +70,7 @@ const Write = () => {
   };
 
   return (
-    <div className="container mx-auto flex flex-col px-4 pb-20 pt-12">
+    <div className="container flex flex-col pb-20 pt-12">
       <h1 className="mb-8 text-2xl font-medium">새로운 글</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-3">
@@ -88,13 +78,23 @@ const Write = () => {
           <Input type="file" ref={fileRef} accept="image/*" />
 
           <ReactSelect
-            options={existingCategories}
+            options={(existingCategories ?? []).map((category) => {
+              return {
+                label: category,
+                value: category,
+              };
+            })}
             placeholder="카테고리"
             isMulti={false}
             onChange={(e) => e && setCategory(e.value)}
           />
           <ReactSelect
-            options={existingTags}
+            options={(existingTags ?? []).map((tag) => {
+              return {
+                label: tag,
+                value: tag,
+              };
+            })}
             placeholder="태그"
             isMulti
             onChange={(e) =>
@@ -106,12 +106,9 @@ const Write = () => {
             value={content}
             onChange={(e) => e && setContent(e)}
           />
-          <button
-            type="submit"
-            className="mt-4 w-full rounded-md bg-gray-800 py-2 text-white"
-          >
+          <Button type="submit" className="mt-4">
             작성하기
-          </button>
+          </Button>
         </div>
       </form>
     </div>

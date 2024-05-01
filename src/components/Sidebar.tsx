@@ -1,4 +1,6 @@
 import { cn } from '@/utils/style';
+import { createClient } from '@/utils/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { AiFillGithub, AiFillInstagram, AiOutlineClose } from 'react-icons/ai';
 import IconButton from './IconButton';
@@ -8,7 +10,18 @@ type SidebarProps = {
   isOpen: boolean;
 };
 
+const supabase = createClient();
+
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
+  const { data: existingCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from('Post').select('category');
+      return Array.from(new Set(data?.map((d) => d.category)));
+    },
+  });
+
   return (
     <div
       className={cn(
@@ -28,12 +41,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
       >
         태그
       </Link>
-      <Link
-        href="/category/Web-Development"
-        className="w048 text-gray-660 font-medium hover:underline"
-      >
-        Web Development
-      </Link>
+      {existingCategories?.map((category) => (
+        <Link
+          href={`/category/${category}`}
+          key={category}
+          className="w048 text-gray-660 font-medium hover:underline"
+        >
+          {category}
+        </Link>
+      ))}
+
       <div className="item-center mt-10 flex gap-4">
         <IconButton
           href="https://instagram.com"
