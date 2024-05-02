@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
   const { data, error } = await supabase
     .from('Post')
-    .insert([{ ...fields, preview_image_url }])
+    .insert([{ ...fields, preview_image: preview_image_url }])
     .select();
 
   if (error) {
