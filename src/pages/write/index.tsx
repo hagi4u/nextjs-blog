@@ -4,7 +4,7 @@ import { MarkdownEditor } from '@/components/Markdown';
 import { useCategories, useTags } from '@/utils/hooks';
 import { useRouter } from 'next/router';
 import { FormEvent, useRef, useState } from 'react';
-import ReactSelect from 'react-select';
+import ReactSelect from 'react-select/creatable';
 
 type ReactSelectProps = {
   label: string;
@@ -53,7 +53,7 @@ const Write = () => {
       <h1 className="mb-8 text-2xl font-medium">새로운 글</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-3">
-          <Input type="text" placeholder="제목" />
+          <Input type="text" ref={titleRef} placeholder="제목" />
           <Input type="file" ref={fileRef} accept="image/*" />
 
           <ReactSelect
@@ -63,6 +63,7 @@ const Write = () => {
                 value: category,
               };
             })}
+            inputId="category"
             placeholder="카테고리"
             isMulti={false}
             onChange={(e) => e && setCategory(e.value)}
@@ -74,6 +75,7 @@ const Write = () => {
                 value: tag,
               };
             })}
+            inputId="tags"
             placeholder="태그"
             isMulti
             onChange={(e) =>

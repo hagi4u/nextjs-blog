@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
-import { BsRobot } from 'react-icons/bs';
 import IconButton from './IconButton';
 
 type HeaderProps = {
@@ -15,6 +14,7 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
       <IconButton
         Icon={isSidebarOpen ? AiOutlineClose : AiOutlineMenu}
         onClick={() => setIsSidebarOpen((t) => !t)}
+        label="sidebarToggle"
         className="p-2"
       />
 
@@ -23,7 +23,6 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
           Blog
         </h1>
       </Link>
-      <IconButton href="/search" component={Link} Icon={BsRobot} />
     </header>
   );
 };

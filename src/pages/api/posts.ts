@@ -16,16 +16,31 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Post | PostgrestError | RangeError>,
 ) {
+  const supabase = await createClient(req.cookies);
+
+  if (req.method === 'DELETE') {
+    const { error } = await supabase
+      .from('Post')
+      .delete()
+      .eq('category', 'Test');
+
+    if (error) {
+      res.status(403).json(error);
+    } else {
+      res.status(200).end();
+    }
+
+    return;
+  }
   if (req.method !== 'POST') {
     return res.status(405).end();
   }
+
   const form = formidable();
 
   const [fields, files] = await form.parse(req);
 
   let preview_image_url: string | null = null;
-
-  const supabase = await createClient(req.cookies);
 
   if (files.preview_image?.length === 1) {
     const file = files.preview_image[0];

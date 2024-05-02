@@ -24,6 +24,8 @@ export default function Admin() {
     if (!response.data.user) {
       return alert('로그인에 실패했습니다.');
     }
+
+    router.reload();
   };
 
   useEffect(() => {
@@ -46,6 +48,17 @@ export default function Admin() {
             onClick={() => router.push('/write')}
           >
             글쓰러가기
+          </Button>
+          <Button
+            type="submit"
+            className="mt-2 w-full"
+            onClick={() => {
+              fetch('/api/posts', {
+                method: 'DELETE',
+              });
+            }}
+          >
+            테스트 글 삭제
           </Button>
           <Button
             type="submit"

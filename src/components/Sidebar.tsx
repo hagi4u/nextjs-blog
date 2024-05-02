@@ -23,7 +23,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
       )}
     >
       <div className="flex justify-end lg:hidden">
-        <IconButton onClick={close} Icon={AiOutlineClose} />
+        <IconButton
+          onClick={close}
+          label="sidebarClose"
+          Icon={AiOutlineClose}
+        />
       </div>
       <Link
         href="/"
@@ -49,8 +53,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
 
       <div className="item-center mt-10 flex gap-4">
         <IconButton
-          href="https://instagram.com"
+          href="https://github.com"
           target="_blank"
+          label="github"
           onClick={close}
           Icon={AiFillGithub}
           component={Link}
@@ -59,6 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
           href="https://instagram.com"
           target="_blank"
           onClick={close}
+          label="instagram"
           Icon={AiFillInstagram}
           component={Link}
         />
