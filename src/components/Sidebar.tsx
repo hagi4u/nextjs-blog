@@ -1,18 +1,14 @@
+'use client';
+
 import { useCategories } from '@/utils/hooks';
 import { cn } from '@/utils/style';
-import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
 import { AiFillGithub, AiFillInstagram, AiOutlineClose } from 'react-icons/ai';
 import IconButton from './IconButton';
+import { useSidebar } from './Providers';
 
-type SidebarProps = {
-  close: () => void;
-  isOpen: boolean;
-};
-
-const supabase = createClient();
-
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
+const Sidebar: React.FC = () => {
+  const { isOpen, setIsOpen } = useSidebar();
   const { data: existingCategories } = useCategories();
 
   return (
@@ -24,7 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
     >
       <div className="flex justify-end lg:hidden">
         <IconButton
-          onClick={close}
+          onClick={() => setIsOpen(false)}
           label="sidebarClose"
           Icon={AiOutlineClose}
         />
@@ -51,19 +47,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, close }) => {
         </Link>
       ))}
 
-      <div className="item-center mt-10 flex gap-4">
+      <div className="mt-10 flex items-center gap-4">
         <IconButton
           href="https://github.com"
           target="_blank"
           label="github"
-          onClick={close}
+          onClick={() => setIsOpen(false)}
           Icon={AiFillGithub}
           component={Link}
         />
         <IconButton
           href="https://instagram.com"
           target="_blank"
-          onClick={close}
+          onClick={() => setIsOpen(false)}
           label="instagram"
           Icon={AiFillInstagram}
           component={Link}

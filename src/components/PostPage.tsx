@@ -1,54 +1,20 @@
+'use client';
+
 import { MarkdownViewer } from '@/components/Markdown';
 import { Post } from '@/types';
-import { createClient } from '@/utils/supabase/server';
 import { format } from 'date-fns';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { FC } from 'react';
 
-const supabase = createClient({});
-
-export const getStaticPaths = (async () => {
-  const { data } = await supabase.from('Post').select('id');
-
-  return {
-    paths: data?.map(({ id }) => ({ params: { id: id.toString() } })) ?? [],
-    fallback: 'blocking',
-  };
-}) satisfies GetStaticPaths;
-
-export const getStaticProps = (async (context) => {
-  const id = context.params?.id;
-
-  const { data } = await supabase.from('Post').select('*').eq('id', Number(id));
-
-  if (!data || !data[0]) {
-    return { notFound: true };
-  }
-
-  const { title, category, created_at, tags, content, preview_image } = data[0];
-  return {
-    props: {
-      id: Number(id),
-      title,
-      category,
-      created_at,
-      tags: JSON.parse(tags) as string[],
-      content,
-      preview_image,
-    },
-  };
-}) satisfies GetStaticProps<Post>;
-
-export default function PostPage({
-  id,
+const PostPage: FC<Post> = ({
   title,
   category,
+  created_at,
   tags,
   content,
-  created_at,
   preview_image,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}) => {
   return (
     <div className="container flex flex-col gap-8 pb-40 pt-20">
       <h1 className="text-4xl font-bold">{title}</h1>
@@ -86,4 +52,6 @@ export default function PostPage({
       <MarkdownViewer source={content} className="mt-8 min-w-full " />
     </div>
   );
-}
+};
+
+export default PostPage;
