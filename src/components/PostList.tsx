@@ -1,3 +1,5 @@
+'use client';
+
 import { Post } from '@/types';
 import { cn } from '@/utils/style';
 import { createClient } from '@/utils/supabase/client';

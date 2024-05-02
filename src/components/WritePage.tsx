@@ -1,8 +1,10 @@
+'use client';
+
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MarkdownEditor } from '@/components/Markdown';
 import { useCategories, useTags } from '@/utils/hooks';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useRef, useState } from 'react';
 import ReactSelect from 'react-select/creatable';
 
@@ -11,7 +13,7 @@ type ReactSelectProps = {
   value: string;
 };
 
-const Write = () => {
+const WritePage = () => {
   const router = useRouter();
 
   const titleRef = useRef<HTMLInputElement>(null);
@@ -96,4 +98,4 @@ const Write = () => {
   );
 };
 
-export default Write;
+export default WritePage;

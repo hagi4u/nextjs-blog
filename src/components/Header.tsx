@@ -1,19 +1,18 @@
+'use client';
+
 import Link from 'next/link';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import IconButton from './IconButton';
+import { useSidebar } from './Providers';
 
-type HeaderProps = {
-  isSidebarOpen: boolean;
-  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
-};
-
-const Header: React.FC<HeaderProps> = ({ isSidebarOpen, setIsSidebarOpen }) => {
+const Header: React.FC = () => {
+  const { isOpen, setIsOpen } = useSidebar();
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 lg:px-10">
       <IconButton
-        Icon={isSidebarOpen ? AiOutlineClose : AiOutlineMenu}
-        onClick={() => setIsSidebarOpen((t) => !t)}
+        Icon={isOpen ? AiOutlineClose : AiOutlineMenu}
+        onClick={() => setIsOpen((t) => !t)}
         label="sidebarToggle"
         className="p-2"
       />
