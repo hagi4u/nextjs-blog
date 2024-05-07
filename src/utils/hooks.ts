@@ -1,8 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { getCategories, getTags } from './fetch';
-import { createClient } from './supabase/client';
-
-const supabase = createClient();
 
 export const useCategories = () =>
   useQuery({
