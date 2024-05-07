@@ -1,7 +1,7 @@
 import PostList from '@/components/PostList';
 import { Post } from '@/types';
+import { getPosts } from '@/utils/fetch';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 
 type CategoryPostsProps = {
   category: string;
@@ -20,16 +20,8 @@ export default async function CategoryPosts({
 }: {
   params: { category: string };
 }) {
-  const supabase = createClient(cookies());
-  const { data } = await supabase
-    .from('Post')
-    .select('*')
-    .eq('category', params?.category);
-  const postData =
-    data?.map((post) => ({
-      ...post,
-      tags: JSON.parse(post.tags),
-    })) ?? [];
+  const category = decodeURIComponent(params.category);
+  const postData = await getPosts({ category });
 
-  return <PostList initialPosts={postData} category={params.category} />;
+  return <PostList initialPosts={postData} category={category} />;
 }

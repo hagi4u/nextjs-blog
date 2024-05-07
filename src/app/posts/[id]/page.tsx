@@ -1,6 +1,7 @@
 import PostPage from '@/components/PostPage';
+import { getPost } from '@/utils/fetch';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 export const generateStaticParams = async () => {
   const supabase = createClient();
@@ -13,16 +14,9 @@ export default async function PostDetailPage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createClient(cookies());
-  const { data } = await supabase
-    .from('Post')
-    .select('*')
-    .eq('id', Number(params.id));
-  if (!data || !data[0]) {
-    return null;
+  const post = await getPost(params.id);
+  if (!post) {
+    return notFound();
   }
-
-  const { tags, ...rest } = data[0];
-
-  return <PostPage {...rest} tags={JSON.parse(tags) as string[]} />;
+  return <PostPage {...post} />;
 }
