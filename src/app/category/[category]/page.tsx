@@ -1,11 +1,17 @@
 import PostList from '@/components/PostList';
-import { Post } from '@/types';
 import { getPosts } from '@/utils/fetch';
 import { createClient } from '@/utils/supabase/server';
+import { Metadata } from 'next';
 
 type CategoryPostsProps = {
-  category: string;
-  posts: Post[];
+  params: { category: string };
+};
+
+export const generateMetadata = ({ params }: CategoryPostsProps): Metadata => {
+  return {
+    title: decodeURIComponent(params.category),
+    description: decodeURIComponent(params.category),
+  };
 };
 
 export const generateStaticParams = async () => {
@@ -15,11 +21,7 @@ export const generateStaticParams = async () => {
   return categories.map((category) => ({ category }));
 };
 
-export default async function CategoryPosts({
-  params,
-}: {
-  params: { category: string };
-}) {
+export default async function CategoryPosts({ params }: CategoryPostsProps) {
   const category = decodeURIComponent(params.category);
   const postData = await getPosts({ category });
 
