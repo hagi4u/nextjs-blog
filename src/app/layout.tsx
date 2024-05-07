@@ -3,10 +3,16 @@ import Header from '@/components/Header';
 import Providers from '@/components/Providers';
 import Sidebar from '@/components/Sidebar';
 import '@/styles/globals.css';
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'hagi4u blog',
+  description: 'hagi4u blog',
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
