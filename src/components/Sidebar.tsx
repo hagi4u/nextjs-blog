@@ -10,6 +10,18 @@ import { useSidebar } from './Providers';
 const Sidebar: React.FC = () => {
   const { isOpen, setIsOpen } = useSidebar();
   const { data: existingCategories } = useCategories();
+  const handleClick = () => {
+    fetch('//dummyjson.com/test')
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('data: ', data);
+        window.open(
+          '//dummyjson.com/test',
+          'GOODSFLOW_POPUP_NAME',
+          `width=800, height=300`,
+        );
+      });
+  };
 
   return (
     <div
@@ -18,6 +30,7 @@ const Sidebar: React.FC = () => {
         isOpen ? 'flex' : 'hidden',
       )}
     >
+      <button onClick={handleClick}>버튼</button>
       <div className="flex justify-end lg:hidden">
         <IconButton
           onClick={() => setIsOpen(false)}
